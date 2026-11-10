@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Datos generados en ejecución (copias de seguridad y capturas de cámara)
+data/backups/
+data/track/snapshots/
+
+# IDE / sistema operativo
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Secretos locales
+.env

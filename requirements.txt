@@ -1,0 +1,12 @@
+# Página de administrador (python -m admin) — obligatorio
+flask>=3.0
+
+# Tracking en vivo y vista previa de detección (secciones 5 y 6) + cámara simulada de las pruebas
+opencv-contrib-python>=4.8
+numpy>=1.26
+
+# Pruebas (python -m pytest tests -v)
+pytest>=8
+
+# ESP32 y semáforo (sección 7), SOLO en modo "hardware" (en "simulation" no hace falta nada de esto)
+pyserial>=3.5
