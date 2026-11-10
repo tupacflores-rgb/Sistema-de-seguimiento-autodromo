@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MULTICAM VISION — Posiciones en vivo</title>
+<meta name="color-scheme" content="dark">
+<style>
+  :root {
+    --bg: #0b0d0b; --surface: #151815; --surface-2: #1d211d; --border: #2c322b;
+    --text: #f1f3ef; --muted: #8d968a; --accent: #ff6b2c;
+    --ok: #51cf66; --warn: #fcc419; --error: #ff6b6b; --info: #74c0fc;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, "SF Mono", monospace;
+    --sans: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: var(--sans); height: 100%; }
+  body { min-height: 100vh; overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
+  header {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 10px 16px; border-bottom: 1px solid var(--border); background: var(--surface);
+  }
+  header h1 { font-size: clamp(16px, 2.6vw, 22px); margin: 0; font-weight: 700; letter-spacing: .02em; }
+  header .sub { color: var(--muted); font-size: clamp(11px, 1.6vw, 13px); }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; border: 1px solid var(--border); }
+  .chip.ok { color: var(--ok); border-color: var(--ok); }
+  .chip.warn { color: var(--warn); border-color: var(--warn); }
+  .chip.error { color: var(--error); border-color: var(--error); }
+  .chip .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  main { padding: 14px; max-width: 1200px; margin: 0 auto; }
+  .center-msg {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+    text-align: center; min-height: 70vh; color: var(--muted); padding: 20px;
+  }
+  .center-msg .big { font-size: clamp(20px, 4vw, 32px); color: var(--text); font-weight: 700; }
+  .center-msg .spinner {
+    width: 44px; height: 44px; border-radius: 50%; border: 4px solid var(--border);
+    border-top-color: var(--accent); animation: spin 1s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .board { display: grid; gap: 10px; }
+  .row {
+    display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 14px;
+    padding: 12px 16px; transition: background .2s;
+  }
+  .row.lead { border-color: var(--accent); background: linear-gradient(90deg, rgba(255,107,44,.12), var(--surface) 55%); }
+  .row.lost { opacity: .45; }
+  .pos { font-size: clamp(26px, 5vw, 40px); font-weight: 800; font-family: var(--mono); text-align: center; color: var(--muted); }
+  .row.lead .pos { color: var(--accent); }
+  .who { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(255,255,255,.35); flex: none; }
+  .name-block { min-width: 0; }
+  .name { font-size: clamp(16px, 2.8vw, 22px); font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .meta { font-size: clamp(11px, 1.8vw, 13px); color: var(--muted); font-family: var(--mono); }
+  .meta .state-tag { text-transform: uppercase; letter-spacing: .04em; }
+  .stats { display: flex; align-items: baseline; gap: 18px; justify-content: flex-end; }
+  .speed { text-align: right; }
+  .speed .n { font-size: clamp(28px, 6vw, 48px); font-weight: 800; font-family: var(--mono); line-height: 1; }
+  .speed .u { font-size: clamp(11px, 1.8vw, 13px); color: var(--muted); }
+  .laps { text-align: right; font-family: var(--mono); font-size: clamp(12px, 2vw, 15px); color: var(--muted); min-width: 92px; }
+  .laps .n { color: var(--text); font-weight: 700; font-size: clamp(14px, 2.4vw, 17px); }
+  .warnbar { background: var(--surface-2); border: 1px solid var(--warn); color: var(--warn); border-radius: 10px; padding: 8px 14px; margin-bottom: 12px; font-size: 13px; }
+  footer { text-align: center; color: var(--muted); font-size: 11px; padding: 14px; }
+  @media (max-width: 560px) {
+    .row { grid-template-columns: 40px 1fr; grid-template-rows: auto auto; row-gap: 8px; }
+    .stats { grid-column: 1 / -1; justify-content: space-between; }
+    .laps { min-width: 0; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>🏁 MULTICAM VISION</h1>
+    <div class="sub">Posiciones y velocidad en vivo</div>
+  </div>
+  <span class="chip warn" id="demoChip" hidden>🧪 DEMO</span>
+  <span class="chip" id="connChip">Conectando…</span>
+</header>
+<main>
+  <div id="warnings"></div>
+  <div id="content">
+    <div class="center-msg"><div class="spinner" aria-hidden="true"></div><div class="big">Cargando…</div></div>
+  </div>
+</main>
+<footer>Esta pantalla es de solo lectura. Se actualiza sola — no hace falta recargarla.</footer>
+<script>
+(function () {
+  "use strict";
+  var contentEl = document.getElementById("content");
+  var connChip = document.getElementById("connChip");
+  var demoChip = document.getElementById("demoChip");
+  var warningsEl = document.getElementById("warnings");
+  var POLL_MS = 500;
+  var failCount = 0;
+
+  function fmtLap(s) {
+    if (s == null) return "—";
+    var m = Math.floor(s / 60), r = s - m * 60;
+    return (m > 0 ? m + ":" : "") + r.toFixed(2).padStart(m > 0 ? 5 : 0, "0");
+  }
+
+  function centerMsg(big, small, isSpinner) {
+    contentEl.innerHTML = "";
+    var wrap = document.createElement("div");
+    wrap.className = "center-msg";
+    if (isSpinner) {
+      var sp = document.createElement("div");
+      sp.className = "spinner";
+      sp.setAttribute("aria-hidden", "true");
+      wrap.appendChild(sp);
+    }
+    var b = document.createElement("div");
+    b.className = "big";
+    b.textContent = big;
+    wrap.appendChild(b);
+    if (small) {
+      var s = document.createElement("div");
+      s.textContent = small;
+      wrap.appendChild(s);
+    }
+    contentEl.appendChild(wrap);
+  }
+
+  function renderBoard(vehicles) {
+    var withPos = vehicles.filter(function (v) { return v.position != null; })
+      .sort(function (a, b) { return a.position - b.position; });
+    var rest = vehicles.filter(function (v) { return v.position == null; });
+    var ordered = withPos.concat(rest);
+
+    if (ordered.length === 0) {
+      centerMsg("Sin vehículos configurados todavía", "Cargalos desde la página de administrador (sección Vehículos).", false);
+      return;
+    }
+
+    var board = document.createElement("div");
+    board.className = "board";
+    ordered.forEach(function (v) {
+      var row = document.createElement("div");
+      var lost = v.state === "buscando" || v.state === "perdido";
+      row.className = "row" + (v.position === 1 ? " lead" : "") + (lost ? " lost" : "");
+
+      var pos = document.createElement("div");
+      pos.className = "pos";
+      pos.textContent = v.position != null ? String(v.position) : "—";
+      row.appendChild(pos);
+
+      var who = document.createElement("div");
+      who.className = "who";
+      var sw = document.createElement("div");
+      sw.className = "swatch";
+      sw.style.background = v.color || "#888";
+      who.appendChild(sw);
+      var nb = document.createElement("div");
+      nb.className = "name-block";
+      var nm = document.createElement("div");
+      nm.className = "name";
+      nm.textContent = v.name;
+      nb.appendChild(nm);
+      var meta = document.createElement("div");
+      meta.className = "meta";
+      var stateLabel = { siguiendo: "en pista", perdido: "señal débil", buscando: "sin señal" }[v.state] || v.state;
+      meta.innerHTML = '<span class="state-tag">' + stateLabel + "</span>";
+      nb.appendChild(meta);
+      who.appendChild(nb);
+      row.appendChild(who);
+
+      var stats = document.createElement("div");
+      stats.className = "stats";
+      var speed = document.createElement("div");
+      speed.className = "speed";
+      var sn = document.createElement("div");
+      sn.className = "n";
+      sn.textContent = v.speed_scale_kmh != null ? Math.round(v.speed_scale_kmh) : "—";
+      var su = document.createElement("div");
+      su.className = "u";
+      su.textContent = "km/h";
+      speed.appendChild(sn); speed.appendChild(su);
+      stats.appendChild(speed);
+
+      var laps = document.createElement("div");
+      laps.className = "laps";
+      laps.innerHTML = '<div class="n">' + (v.laps || 0) + " vueltas</div>"
+        + "<div>última " + fmtLap(v.last_lap_s) + "</div>"
+        + "<div>mejor " + fmtLap(v.best_lap_s) + "</div>";
+      stats.appendChild(laps);
+
+      row.appendChild(stats);
+      board.appendChild(row);
+    });
+    contentEl.innerHTML = "";
+    contentEl.appendChild(board);
+  }
+
+  function setConn(ok, label) {
+    connChip.className = "chip " + (ok ? "ok" : "error");
+    connChip.innerHTML = '<span class="dot"></span>' + label;
+  }
+
+  function tick() {
+    fetch("/api/tracking/state", { cache: "no-store" })
+      .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, data: d }; }); })
+      .then(function (res) {
+        failCount = 0;
+        var d = res.data;
+        if (!res.ok || d.ok === false) {
+          setConn(false, "Error");
+          centerMsg(d.error || "No se pudo leer el estado del tracking", null, false);
+          return;
+        }
+        setConn(true, "En línea");
+        demoChip.hidden = !d.demo;
+        var warnings = [];
+        if (d.dependency_error) warnings.push(d.dependency_error);
+        if (Array.isArray(d.warnings)) warnings = warnings.concat(d.warnings);
+        warningsEl.innerHTML = "";
+        warnings.forEach(function (w) {
+          var b = document.createElement("div");
+          b.className = "warnbar";
+          b.textContent = w;
+          warningsEl.appendChild(b);
+        });
+        if (!d.running) {
+          centerMsg("Esperando a que arranque el tracking…",
+            "Iniciálo desde la página de administrador, sección Tracking.", true);
+          return;
+        }
+        renderBoard(d.vehicles || []);
+      })
+      .catch(function () {
+        failCount++;
+        setConn(false, "Sin conexión");
+        if (failCount >= 3) centerMsg("Sin conexión con el servidor", "Se va a reconectar sola apenas vuelva.", true);
+      });
+  }
+
+  tick();
+  setInterval(tick, POLL_MS);
+
+  // Mejor esfuerzo para que la pantalla no se apague sola (no todos los navegadores lo soportan).
+  if ("wakeLock" in navigator) {
+    navigator.wakeLock.request("screen").catch(function () {});
+  }
+})();
+</script>
+</body>
+</html>
