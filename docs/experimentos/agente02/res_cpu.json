@@ -1,0 +1,15 @@
+{
+ "imdecode_640x480_color_ms": 2.15,
+ "imdecode_640x480_reduced2_ms": 0.69,
+ "jpeg_kB_640x480_q80": 39.9,
+ "imdecode_960x720_color_ms": 2.8,
+ "imdecode_960x720_reduced2_ms": 2.51,
+ "jpeg_kB_960x720_q80": 89.0,
+ "imdecode_1920x1080_color_ms": 7.11,
+ "imdecode_1920x1080_reduced2_ms": 4.14,
+ "jpeg_kB_1920x1080_q80": 265.7,
+ "cpu_mjpeg_640x480_30fps_pct_one_core": 3.7,
+ "fps_mjpeg": 30.0,
+ "cpu_ffmpeg_640x480_30fps_pct_one_core": 3.4,
+ "fps_ffmpeg": 30.0
+}

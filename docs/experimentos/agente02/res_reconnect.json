@@ -1,0 +1,278 @@
+{
+ "mjpeg_drop": {
+  "backend": "mjpeg",
+  "kind": "drop",
+  "recovery_s": 0.02,
+  "detect_s": 0.032,
+  "detect_state": "backoff",
+  "reconnects": 1,
+  "sessions": 1,
+  "last_error": "ConnectionError('EOF')",
+  "events": [
+   [
+    0.032,
+    "backoff"
+   ]
+  ]
+ },
+ "mjpeg_kill": {
+  "backend": "mjpeg",
+  "kind": "kill",
+  "recovery_s": 0.758,
+  "detect_s": 0.006,
+  "detect_state": "backoff",
+  "reconnects": 5,
+  "sessions": 2,
+  "last_error": "ConnectionRefusedError(111, 'Connection refused')",
+  "events": [
+   [
+    0.006,
+    "backoff"
+   ],
+   [
+    0.256,
+    "connecting"
+   ],
+   [
+    0.256,
+    "backoff"
+   ],
+   [
+    0.757,
+    "connecting"
+   ],
+   [
+    0.757,
+    "backoff"
+   ],
+   [
+    1.762,
+    "connecting"
+   ],
+   [
+    1.762,
+    "backoff"
+   ],
+   [
+    3.762,
+    "connecting"
+   ],
+   [
+    3.763,
+    "backoff"
+   ],
+   [
+    5.763,
+    "connecting"
+   ],
+   [
+    5.765,
+    "streaming"
+   ]
+  ]
+ },
+ "mjpeg_stall": {
+  "backend": "mjpeg",
+  "kind": "stall",
+  "gap_until_next_frame_s": 8.006,
+  "stall_s": 8.0,
+  "session_of_first_frame_after": 4,
+  "detect_s": 2.038,
+  "detect_state": "stalled",
+  "reconnects": 3,
+  "sessions": 4,
+  "last_error": "timeout: timed out",
+  "events": [
+   [
+    2.038,
+    "stalled"
+   ],
+   [
+    2.038,
+    "backoff"
+   ],
+   [
+    2.288,
+    "connecting"
+   ],
+   [
+    4.29,
+    "stalled"
+   ],
+   [
+    4.29,
+    "backoff"
+   ],
+   [
+    4.791,
+    "connecting"
+   ],
+   [
+    6.794,
+    "stalled"
+   ],
+   [
+    6.794,
+    "backoff"
+   ],
+   [
+    7.794,
+    "connecting"
+   ],
+   [
+    8.007,
+    "streaming"
+   ]
+  ]
+ },
+ "ffmpeg_drop": {
+  "backend": "ffmpeg",
+  "kind": "drop",
+  "recovery_s": 0.025,
+  "detect_s": null,
+  "detect_state": null,
+  "reconnects": 0,
+  "sessions": 1,
+  "last_error": "",
+  "events": []
+ },
+ "ffmpeg_kill": {
+  "backend": "ffmpeg",
+  "kind": "kill",
+  "recovery_s": 0.757,
+  "detect_s": 0.004,
+  "detect_state": "backoff",
+  "reconnects": 5,
+  "sessions": 2,
+  "last_error": "ConnectionError('VideoCapture no abri\u00f3')",
+  "events": [
+   [
+    0.004,
+    "backoff"
+   ],
+   [
+    0.254,
+    "connecting"
+   ],
+   [
+    0.254,
+    "backoff"
+   ],
+   [
+    0.754,
+    "connecting"
+   ],
+   [
+    0.755,
+    "backoff"
+   ],
+   [
+    1.755,
+    "connecting"
+   ],
+   [
+    1.755,
+    "backoff"
+   ],
+   [
+    3.756,
+    "connecting"
+   ],
+   [
+    3.756,
+    "backoff"
+   ],
+   [
+    5.756,
+    "connecting"
+   ],
+   [
+    5.76,
+    "streaming"
+   ]
+  ]
+ },
+ "ffmpeg_stall": {
+  "backend": "ffmpeg",
+  "kind": "stall",
+  "gap_until_next_frame_s": 8.791,
+  "stall_s": 8.0,
+  "session_of_first_frame_after": 2,
+  "detect_s": 2.026,
+  "detect_state": "backoff",
+  "reconnects": 4,
+  "sessions": 2,
+  "last_error": "ConnectionError('VideoCapture no abri\u00f3')",
+  "events": [
+   [
+    2.026,
+    "backoff"
+   ],
+   [
+    2.276,
+    "connecting"
+   ],
+   [
+    3.279,
+    "backoff"
+   ],
+   [
+    3.779,
+    "connecting"
+   ],
+   [
+    4.785,
+    "backoff"
+   ],
+   [
+    5.785,
+    "connecting"
+   ],
+   [
+    6.789,
+    "backoff"
+   ],
+   [
+    8.789,
+    "connecting"
+   ],
+   [
+    8.791,
+    "streaming"
+   ]
+  ]
+ },
+ "raw_ffmpeg_kill": {
+  "read_after_kill_ok": false,
+  "read_returned_after_s": 0.0,
+  "same_object_reads_after_restart": [
+   false,
+   false,
+   false,
+   false,
+   false
+  ]
+ },
+ "raw_ffmpeg_stall_timeout2000": {
+  "read_timeout_ms": 2000,
+  "stall_s": 6,
+  "buffered_ok_reads": 1,
+  "failing_read": [
+   0.032,
+   2.01,
+   false
+  ],
+  "longest_block_s": 2.01
+ },
+ "raw_ffmpeg_stall_default": {
+  "read_timeout_ms": null,
+  "stall_s": 40,
+  "buffered_ok_reads": 1,
+  "failing_read": [
+   0.033,
+   30.05,
+   false
+  ],
+  "longest_block_s": 30.05
+ }
+}

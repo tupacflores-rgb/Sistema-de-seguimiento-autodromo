@@ -1,0 +1,72 @@
+==============================================================================
+B1. Error de la homografía piso->mundo (mm) sobre la grilla de la pista
+    21 marcadores ref (50 mm), 300 ensayos Monte Carlo, método: RANSAC mundo->img 4 px + reajuste LSQ sobre inliers
+==============================================================================
+
+-- cámaras a altura 600 mm, a 700 mm del borde; px/mm en piso (cerca/medio/lejos, cam A): 0.80/0.52/0.39
+  ruido 0.5px, colocación 0.0mm | A: media 0.60 p95 1.61 max 7.53 (marc 14, cobertura 75%) | B: media 0.54 p95 1.39 | cruzado A-B zona compartida: media 0.92 p95 2.21 mm (n=695)
+  ruido 1.0px, colocación 0.0mm | A: media 1.18 p95 3.20 max 17.24 (marc 14, cobertura 75%) | B: media 1.12 p95 2.93 | cruzado A-B zona compartida: media 1.87 p95 4.51 mm (n=695)
+  ruido 0.5px, colocación 1.0mm | A: media 0.74 p95 1.87 max 7.28 (marc 14, cobertura 75%) | B: media 0.67 p95 1.60 | cruzado A-B zona compartida: media 1.09 p95 2.60 mm (n=695)
+  ruido 1.0px, colocación 1.0mm | A: media 1.34 p95 3.51 max 14.92 (marc 14, cobertura 75%) | B: media 1.18 p95 3.00 | cruzado A-B zona compartida: media 2.00 p95 4.82 mm (n=695)
+
+-- cámaras a altura 1000 mm, a 700 mm del borde; px/mm en piso (cerca/medio/lejos, cam A): 0.63/0.46/0.36
+  ruido 0.5px, colocación 0.0mm | A: media 0.43 p95 1.03 max 3.80 (marc 17, cobertura 83%) | B: media 0.44 p95 1.04 | cruzado A-B zona compartida: media 0.66 p95 1.47 mm (n=819)
+  ruido 1.0px, colocación 0.0mm | A: media 0.87 p95 2.09 max 7.47 (marc 17, cobertura 83%) | B: media 0.88 p95 2.10 | cruzado A-B zona compartida: media 1.35 p95 3.05 mm (n=819)
+  ruido 0.5px, colocación 1.0mm | A: media 0.53 p95 1.19 max 4.00 (marc 17, cobertura 83%) | B: media 0.53 p95 1.18 | cruzado A-B zona compartida: media 0.79 p95 1.67 mm (n=819)
+  ruido 1.0px, colocación 1.0mm | A: media 0.91 p95 2.09 max 6.55 (marc 17, cobertura 83%) | B: media 0.93 p95 2.12 | cruzado A-B zona compartida: media 1.39 p95 3.05 mm (n=819)
+
+-- cámaras a altura 1600 mm, a 700 mm del borde; px/mm en piso (cerca/medio/lejos, cam A): 0.45/0.37/0.31
+  ruido 0.5px, colocación 0.0mm | A: media 0.45 p95 1.00 max 2.93 (marc 18, cobertura 92%) | B: media 0.45 p95 1.02 | cruzado A-B zona compartida: media 0.65 p95 1.38 mm (n=1036)
+  ruido 1.0px, colocación 0.0mm | A: media 0.91 p95 2.10 max 5.85 (marc 18, cobertura 92%) | B: media 0.90 p95 2.01 | cruzado A-B zona compartida: media 1.32 p95 2.82 mm (n=1036)
+  ruido 0.5px, colocación 1.0mm | A: media 0.53 p95 1.15 max 3.78 (marc 18, cobertura 92%) | B: media 0.53 p95 1.17 | cruzado A-B zona compartida: media 0.76 p95 1.63 mm (n=1036)
+  ruido 1.0px, colocación 1.0mm | A: media 0.93 p95 2.10 max 6.96 (marc 18, cobertura 92%) | B: media 0.97 p95 2.16 | cruzado A-B zona compartida: media 1.38 p95 3.00 mm (n=1036)
+
+-- Sin corregir distorsión (usar píxeles crudos), altura 1000, ruido 0.5 px:
+  A: media 4.19 p95 9.64 max 40.60 mm | B: media 4.30 max 60.70 | cruzado media 6.08 p95 14.53 mm | RMS en referencias 7.34 mm
+  (con corrección: RMS en referencias 2.62 mm)
+
+-- Método/dirección de estimación (altura 1000, ruido 1.0 px + 1 mm):
+  [marcadores atípicos (+40 mm) por cámara: 0]
+    fallos=  0 LSQ img->mundo                     A media   1.00 p95   2.33 | cruzado media   1.53 mm
+    fallos=  0 RANSAC img->mundo thr 3 mm         A media   2.59 p95   6.55 | cruzado media   4.12 mm
+    fallos=  0 RANSAC img->mundo thr 10 mm        A media   1.63 p95   4.55 | cruzado media   2.73 mm
+    fallos=  0 LSQ mundo->img (inv)               A media   0.89 p95   2.04 | cruzado media   1.35 mm
+    fallos=  0 RANSAC mundo->img thr 2 px         A media   1.94 p95   4.48 | cruzado media   3.05 mm
+    fallos=  0 RANSAC mundo->img thr 4 px         A media   1.14 p95   2.77 | cruzado media   1.74 mm
+    fallos=  0 RANSAC 4 px + reajuste LSQ inliers A media   0.92 p95   2.12 | cruzado media   1.39 mm
+    fallos=244 MAGSAC mundo->img thr 2 px         A media 1894.41 p95 2721.68 | cruzado media 4137.00 mm
+  [marcadores atípicos (+40 mm) por cámara: 2]
+    fallos=  0 LSQ img->mundo                     A media   5.90 p95  13.82 | cruzado media   6.20 mm
+    fallos=  0 RANSAC img->mundo thr 3 mm         A media   2.79 p95   7.11 | cruzado media   4.57 mm
+    fallos=  0 RANSAC img->mundo thr 10 mm        A media   1.79 p95   4.85 | cruzado media   3.00 mm
+    fallos=  0 LSQ mundo->img (inv)               A media   6.42 p95  15.41 | cruzado media   7.55 mm
+    fallos=  0 RANSAC mundo->img thr 2 px         A media   2.06 p95   4.87 | cruzado media   3.08 mm
+    fallos=  0 RANSAC mundo->img thr 4 px         A media   1.27 p95   2.98 | cruzado media   2.03 mm
+    fallos=  0 RANSAC 4 px + reajuste LSQ inliers A media   1.13 p95   2.52 | cruzado media   1.68 mm
+    fallos=224 MAGSAC mundo->img thr 2 px         A media 5210.76 p95 3083.36 | cruzado media 7564.15 mm
+
+==============================================================================
+B2. Error de paralaje: punto a h = 45 mm (marcador sobre el techo) mapeado con H del piso
+==============================================================================
+  cámara h_c=600 mm: error paralaje media 124.9 mm, min 56.8, max 215.0 mm (ángulo de elevación 13-41°); fórmula h*d/(Hc-h): max |dif| 0.000 mm
+     mismo techo visto por A y B (zona compartida, sin corrección): desacuerdo media 105.4 mm, max 105.4 mm
+  cámara h_c=1000 mm: error paralaje media 72.5 mm, min 33.0, max 125.0 mm (ángulo de elevación 21-55°); fórmula h*d/(Hc-h): max |dif| 0.000 mm
+     mismo techo visto por A y B (zona compartida, sin corrección): desacuerdo media 61.3 mm, max 61.3 mm
+  cámara h_c=1600 mm: error paralaje media 45.3 mm, min 20.3, max 76.7 mm (ángulo de elevación 31-66°); fórmula h*d/(Hc-h): max |dif| 0.000 mm
+     mismo techo visto por A y B (zona compartida, sin corrección): desacuerdo media 37.6 mm, max 37.6 mm
+
+-- Corrección del paralaje (altura cámara 1000 mm, Monte Carlo 300, ruido 1.0 px + 1 mm):
+  sin corrección                        : media  72.51 mm, p95 107.22, max 143.79
+  H del plano z=h (pose por solvePnP)   : media   0.85 mm, p95   2.07, max   9.72
+  corrección radial al pie de cámara    : media   2.07 mm, p95   5.02, max  24.33
+  idem con h mal estimada (+5 mm)       : media   8.25 mm, p95  13.86, max  33.23
+  desacuerdo A-B del mismo techo tras corrección radial: media 3.04 mm, p95 7.00 mm
+  error de posición del centro óptico estimado por solvePnP: media 1.9 mm, p95 3.5 mm
+
+==============================================================================
+B3. Detección de descalibración: la cámara A gira (golpe/estabilización) y la H vieja se mantiene
+==============================================================================
+  giro 0.10°: desplazamiento en imagen de esquinas ref media 1.39 px; error en pista media 5.8 mm, max 12.0 mm; residuo en referencias media 6.2 mm
+  giro 0.25°: desplazamiento en imagen de esquinas ref media 3.47 px; error en pista media 14.5 mm, max 30.2 mm; residuo en referencias media 15.4 mm
+  giro 0.50°: desplazamiento en imagen de esquinas ref media 6.95 px; error en pista media 29.2 mm, max 61.0 mm; residuo en referencias media 31.1 mm
+  giro 1.00°: desplazamiento en imagen de esquinas ref media 13.89 px; error en pista media 59.3 mm, max 124.6 mm; residuo en referencias media 63.2 mm

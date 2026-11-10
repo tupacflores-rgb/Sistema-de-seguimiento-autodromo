@@ -1,0 +1,66 @@
+{
+ "A_ffmpeg_direct_P0": {
+  "n": 121,
+  "fps_consumed": 30.2,
+  "lat_med": 3.0,
+  "lat_p95": 4.0,
+  "lat_max": 10.0,
+  "lat_first3s_med": 3.0,
+  "lat_last3s_med": 3.0,
+  "seq_skipped": 0,
+  "open_s": 0.002,
+  "first_frame_s": 0.004,
+  "bufsize_set_returned": false,
+  "bufsize_get": -1.0
+ },
+ "E_ffmpeg_direct_nobuffer_P0": {
+  "n": 120,
+  "fps_consumed": 30.0,
+  "lat_med": 3.0,
+  "lat_p95": 4.0,
+  "lat_max": 5.0,
+  "lat_first3s_med": 3.0,
+  "lat_last3s_med": 3.0,
+  "seq_skipped": 0,
+  "open_s": 0.001,
+  "first_frame_s": 0.021,
+  "bufsize_set_returned": false,
+  "bufsize_get": -1.0
+ },
+ "B_mjpeg_direct_P0": {
+  "n": 122,
+  "fps_consumed": 30.5,
+  "lat_med": 3.0,
+  "lat_p95": 4.0,
+  "lat_max": 6.0,
+  "lat_first3s_med": 3.0,
+  "lat_last3s_med": 3.0,
+  "seq_skipped": 0,
+  "open_s": 0.002,
+  "first_frame_s": 0.003
+ },
+ "C_thread_mjpeg_P0": {
+  "n": 122,
+  "fps_consumed": 30.5,
+  "lat_med": 3.0,
+  "lat_p95": 4.0,
+  "lat_max": 11.0,
+  "lat_first3s_med": 3.0,
+  "lat_last3s_med": 3.0,
+  "seq_skipped": 0,
+  "first_frame_s": 0.005,
+  "dropped_overwrite": 0
+ },
+ "D_thread_ffmpeg_P0": {
+  "n": 122,
+  "fps_consumed": 30.5,
+  "lat_med": 3.0,
+  "lat_p95": 4.0,
+  "lat_max": 6.0,
+  "lat_first3s_med": 3.0,
+  "lat_last3s_med": 3.0,
+  "seq_skipped": 0,
+  "first_frame_s": 0.037,
+  "dropped_overwrite": 0
+ }
+}

@@ -1,0 +1,77 @@
+{
+ "lat_A": {
+  "n_edges": 20,
+  "est_median_ms": 48.3,
+  "est_iqr_ms": 4.0,
+  "true_median_ms": 35.0,
+  "true_p5_p95_ms": [
+   31.0,
+   40.0
+  ],
+  "fps": 30.1
+ },
+ "lat_B": {
+  "n_edges": 20,
+  "est_median_ms": 113.3,
+  "est_iqr_ms": 12.8,
+  "true_median_ms": 135.0,
+  "true_p5_p95_ms": [
+   123.0,
+   149.0
+  ],
+  "fps": 30.1
+ },
+ "rel_offset_est_ms": 65.0,
+ "sync_without_offsets": {
+  "offsets_ms": {
+   "A": 0.0,
+   "B": 0.0
+  },
+  "tolerance_ms": 20.0,
+  "polls": 443,
+  "unique_pairs": 391,
+  "true_skew_med_ms": 95.0,
+  "true_skew_p95_ms": 128.0,
+  "true_skew_max_ms": 128.0
+ },
+ "sync_without_offsets_tol60": {
+  "offsets_ms": {
+   "A": 0.0,
+   "B": 0.0
+  },
+  "tolerance_ms": 60.0,
+  "polls": 439,
+  "unique_pairs": 394,
+  "true_skew_med_ms": 95.0,
+  "true_skew_p95_ms": 118.5,
+  "true_skew_max_ms": 129.0
+ },
+ "sync_with_offsets": {
+  "offsets_ms": {
+   "A": 48.3,
+   "B": 113.3
+  },
+  "tolerance_ms": 20.0,
+  "polls": 442,
+  "unique_pairs": 317,
+  "true_skew_med_ms": 28.0,
+  "true_skew_p95_ms": 61.0,
+  "true_skew_max_ms": 65.0
+ },
+ "sync_with_offsets_tol60": {
+  "offsets_ms": {
+   "A": 48.3,
+   "B": 113.3
+  },
+  "tolerance_ms": 60.0,
+  "polls": 440,
+  "unique_pairs": 391,
+  "true_skew_med_ms": 28.0,
+  "true_skew_p95_ms": 62.0,
+  "true_skew_max_ms": 66.0
+ },
+ "naive_latest_pair": {
+  "true_skew_med_ms": 95.0,
+  "true_skew_p95_ms": 128.0
+ }
+}

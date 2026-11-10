@@ -1,0 +1,106 @@
+[
+ {
+  "method": "MOG2 (shadows on, fg=255)",
+  "recall": 0.9987654320987654,
+  "recall_per_car": [
+   0.9962962962962963,
+   1.0,
+   1.0
+  ],
+  "recall_after_light_drop": 1.0,
+  "fp_per_frame": 0.003703703703703704,
+  "centroid_err_median_px": 1.0445848683002261,
+  "centroid_err_p95_px": 6.424836415366027
+ },
+ {
+  "method": "KNN (shadows on, fg=255)",
+  "recall": 1.0,
+  "recall_per_car": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "recall_after_light_drop": 1.0,
+  "fp_per_frame": 0.0,
+  "centroid_err_median_px": 0.719338836981099,
+  "centroid_err_p95_px": 1.4271021333359781
+ },
+ {
+  "method": "Static diff, sin normalizar, sin sombras",
+  "recall": 0.5814814814814815,
+  "recall_per_car": [
+   0.4444444444444444,
+   0.9518518518518518,
+   0.34814814814814815
+  ],
+  "recall_after_light_drop": 0.30666666666666664,
+  "fp_per_frame": 0.6370370370370371,
+  "centroid_err_median_px": 0.804254491452088,
+  "centroid_err_p95_px": 1.6486547491009098
+ },
+ {
+  "method": "Static diff + norm. ganancia",
+  "recall": 0.6098765432098765,
+  "recall_per_car": [
+   0.5037037037037037,
+   1.0,
+   0.32592592592592595
+  ],
+  "recall_after_light_drop": 0.37333333333333335,
+  "fp_per_frame": 0.0,
+  "centroid_err_median_px": 0.7866167576192515,
+  "centroid_err_p95_px": 1.6517971973306946
+ },
+ {
+  "method": "Static diff + norm. + test sombra",
+  "recall": 0.6098765432098765,
+  "recall_per_car": [
+   0.5037037037037037,
+   1.0,
+   0.32592592592592595
+  ],
+  "recall_after_light_drop": 0.37333333333333335,
+  "fp_per_frame": 0.0,
+  "centroid_err_median_px": 0.7866167576192515,
+  "centroid_err_p95_px": 1.6517971973306946
+ },
+ {
+  "method": "Static diff COLOR (max canal) + norm + sombra",
+  "recall": 1.0,
+  "recall_per_car": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "recall_after_light_drop": 1.0,
+  "fp_per_frame": 0.0,
+  "centroid_err_median_px": 0.9609264271501835,
+  "centroid_err_p95_px": 1.4884275368229243
+ },
+ {
+  "method": "Static diff COLOR, min_area=300",
+  "recall": 1.0,
+  "recall_per_car": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "recall_after_light_drop": 1.0,
+  "fp_per_frame": 0.0,
+  "centroid_err_median_px": 0.9609264271501835,
+  "centroid_err_p95_px": 1.4884275368229243
+ },
+ {
+  "method": "HSV placa de color (con identidad)",
+  "recall": 0.5370370370370371,
+  "recall_per_car": [
+   0.5407407407407407,
+   1.0,
+   0.07037037037037037
+  ],
+  "recall_after_light_drop": 0.5711111111111111,
+  "fp_per_frame": 0.45925925925925926,
+  "centroid_err_median_px": 0.9039207400639688,
+  "centroid_err_p95_px": 9.336897589692185
+ }
+]

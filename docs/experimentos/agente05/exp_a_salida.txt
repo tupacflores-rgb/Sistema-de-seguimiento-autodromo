@@ -1,0 +1,99 @@
+pose  0: charuco corners=17/24  chessboard=FALLA
+pose  1: charuco corners=24/24  chessboard=OK
+pose  2: charuco corners=24/24  chessboard=OK
+pose  3: charuco corners=24/24  chessboard=OK
+pose  4: charuco corners=24/24  chessboard=OK
+pose  5: charuco corners=24/24  chessboard=OK
+pose  6: charuco corners=24/24  chessboard=OK
+pose  7: charuco corners=24/24  chessboard=OK
+pose  8: charuco corners=20/24  chessboard=OK
+pose  9: charuco corners=24/24  chessboard=OK
+pose 10: charuco corners=24/24  chessboard=OK
+pose 11: charuco corners= 8/24  chessboard=FALLA
+pose 12: charuco corners=11/24  chessboard=FALLA
+pose 13: charuco corners=24/24  chessboard=OK
+pose 14: charuco corners=24/24  chessboard=OK
+
+SEED=0
+
+[ChArUco] vistas usadas=15  puntos=320  RMS reproy=0.059 px
+  fx 779.50 (verd 780.0)  fy 780.62 (781.0)  cx 483.13 (482.0)  cy 356.69 (357.0)
+  err rel fx=0.064%  fy=0.048%  |dc|=1.17 px
+  dist est = [-0.085   0.0606  0.0004 -0.      0.    ]  verd = [-0.085   0.06    0.0006 -0.0004  0.    ]
+  residuo de distorsión NO absorbible por homografía: media 0.042 px, p95 0.096 px, max 0.214 px
+  error del modelo completo sobre la imagen (mapa de distorsión): media 1.337 px, max 1.998 px
+
+[Ajedrez SB] vistas usadas=12  puntos=288  RMS reproy=0.031 px
+  fx 780.05 (verd 780.0)  fy 781.00 (781.0)  cx 481.90 (482.0)  cy 356.78 (357.0)
+  err rel fx=0.006%  fy=0.000%  |dc|=0.24 px
+  dist est = [-0.0858  0.0608  0.0005 -0.0004  0.    ]  verd = [-0.085   0.06    0.0006 -0.0004  0.    ]
+  residuo de distorsión NO absorbible por homografía: media 0.019 px, p95 0.034 px, max 0.049 px
+  error del modelo completo sobre la imagen (mapa de distorsión): media 0.272 px, max 0.448 px
+
+Magnitud de la distorsión verdadera: media 5.97 px, max (esquina) 19.22 px
+pose  0: charuco corners=24/24  chessboard=OK
+pose  1: charuco corners=22/24  chessboard=OK
+pose  2: charuco corners=24/24  chessboard=OK
+pose  3: charuco corners=18/24  chessboard=OK
+pose  4: charuco corners=24/24  chessboard=OK
+pose  5: charuco corners=24/24  chessboard=OK
+pose  6: charuco corners=18/24  chessboard=OK
+pose  7: charuco corners=24/24  chessboard=OK
+pose  8: charuco corners=24/24  chessboard=OK
+pose  9: charuco corners=24/24  chessboard=OK
+pose 10: charuco corners=24/24  chessboard=OK
+pose 11: charuco corners=24/24  chessboard=OK
+pose 12: charuco corners= 5/24  chessboard=FALLA
+pose 13: charuco corners=15/24  chessboard=FALLA
+pose 14: charuco corners=22/24  chessboard=OK
+
+SEED=1
+
+[ChArUco] vistas usadas=14  puntos=311  RMS reproy=0.069 px
+  fx 779.76 (verd 780.0)  fy 780.78 (781.0)  cx 482.59 (482.0)  cy 357.22 (357.0)
+  err rel fx=0.031%  fy=0.028%  |dc|=0.63 px
+  dist est = [-0.0854  0.0614  0.0005 -0.0002  0.    ]  verd = [-0.085   0.06    0.0006 -0.0004  0.    ]
+  residuo de distorsión NO absorbible por homografía: media 0.026 px, p95 0.062 px, max 0.191 px
+  error del modelo completo sobre la imagen (mapa de distorsión): media 0.692 px, max 0.900 px
+
+[Ajedrez SB] vistas usadas=13  puntos=312  RMS reproy=0.045 px
+  fx 779.82 (verd 780.0)  fy 780.90 (781.0)  cx 481.93 (482.0)  cy 356.43 (357.0)
+  err rel fx=0.023%  fy=0.013%  |dc|=0.58 px
+  dist est = [-0.0861  0.0619  0.0005 -0.0004  0.    ]  verd = [-0.085   0.06    0.0006 -0.0004  0.    ]
+  residuo de distorsión NO absorbible por homografía: media 0.019 px, p95 0.037 px, max 0.139 px
+  error del modelo completo sobre la imagen (mapa de distorsión): media 0.619 px, max 0.775 px
+
+Magnitud de la distorsión verdadera: media 5.97 px, max (esquina) 19.22 px
+pose  0: charuco corners=24/24  chessboard=OK
+pose  1: charuco corners=24/24  chessboard=OK
+pose  2: charuco corners=24/24  chessboard=OK
+pose  3: charuco corners=24/24  chessboard=OK
+pose  4: charuco corners=24/24  chessboard=OK
+pose  5: charuco corners=24/24  chessboard=OK
+pose  6: charuco corners=24/24  chessboard=OK
+pose  7: charuco corners=24/24  chessboard=OK
+pose  8: charuco corners=24/24  chessboard=OK
+pose  9: charuco corners=24/24  chessboard=OK
+pose 10: charuco corners=12/24  chessboard=FALLA
+pose 11: charuco corners=18/24  chessboard=OK
+pose 12: charuco corners=14/24  chessboard=FALLA
+pose 13: charuco corners=10/24  chessboard=FALLA
+pose 14: charuco corners=24/24  chessboard=OK
+
+SEED=2
+
+[ChArUco] vistas usadas=15  puntos=318  RMS reproy=0.070 px
+  fx 779.12 (verd 780.0)  fy 780.10 (781.0)  cx 482.17 (482.0)  cy 356.97 (357.0)
+  err rel fx=0.113%  fy=0.115%  |dc|=0.17 px
+  dist est = [-0.0855  0.0594  0.0006 -0.0004  0.    ]  verd = [-0.085   0.06    0.0006 -0.0004  0.    ]
+  residuo de distorsión NO absorbible por homografía: media 0.038 px, p95 0.088 px, max 0.192 px
+  error del modelo completo sobre la imagen (mapa de distorsión): media 0.465 px, max 1.178 px
+
+[Ajedrez SB] vistas usadas=12  puntos=288  RMS reproy=0.037 px
+  fx 780.27 (verd 780.0)  fy 781.31 (781.0)  cx 481.91 (482.0)  cy 356.86 (357.0)
+  err rel fx=0.035%  fy=0.039%  |dc|=0.16 px
+  dist est = [-0.085   0.0612  0.0005 -0.0004  0.    ]  verd = [-0.085   0.06    0.0006 -0.0004  0.    ]
+  residuo de distorsión NO absorbible por homografía: media 0.035 px, p95 0.085 px, max 0.218 px
+  error del modelo completo sobre la imagen (mapa de distorsión): media 0.237 px, max 0.783 px
+
+Magnitud de la distorsión verdadera: media 5.97 px, max (esquina) 19.22 px
