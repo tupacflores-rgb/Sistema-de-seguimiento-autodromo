@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "count": 2,
+  "vehicles": [
+    {
+      "id": 1,
+      "name": "Auto 1",
+      "color": "#ff0000",
+      "hue_tol": 12,
+      "sat_min": 90,
+      "val_min": 90,
+      "area_min_px": 20,
+      "area_max_px": 20000
+    },
+    {
+      "id": 2,
+      "name": "Auto 2",
+      "color": "#00ff00",
+      "hue_tol": 12,
+      "sat_min": 90,
+      "val_min": 90,
+      "area_min_px": 20,
+      "area_max_px": 20000
+    },
+    {
+      "id": 3,
+      "name": "Auto 3",
+      "color": "#0000ff",
+      "hue_tol": 12,
+      "sat_min": 90,
+      "val_min": 90,
+      "area_min_px": 20,
+      "area_max_px": 20000
+    },
+    {
+      "id": 4,
+      "name": "Auto 4",
+      "color": "#ff00ff",
+      "hue_tol": 12,
+      "sat_min": 90,
+      "val_min": 90,
+      "area_min_px": 20,
+      "area_max_px": 20000
+    }
+  ],
+  "detection": {
+    "require_motion_to_start": true,
+    "limit_to_track": true,
+    "process_max_width": 960,
+    "lost_after_s": 1.0,
+    "led_height_mm": 50
+  },
+  "updated_at": "2026-11-09T16:13:09-03:00"
+}

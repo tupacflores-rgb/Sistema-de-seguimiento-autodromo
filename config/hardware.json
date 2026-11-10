@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "esp32": {
+    "mode": "simulation",
+    "port": "",
+    "baudrate": 115200,
+    "reader_count": 3,
+    "reader_lanes": [
+      1,
+      2,
+      3
+    ],
+    "spi_sck": 18,
+    "spi_miso": 19,
+    "spi_mosi": 23,
+    "reader_cs_pins": [
+      21,
+      22,
+      32
+    ],
+    "reader_rst_pin": 33
+  },
+  "semaphore": {
+    "led_count": 6,
+    "countdown_seconds": 6,
+    "tick_seconds": 1.0,
+    "data_pin": 25,
+    "clock_pin": 26,
+    "latch_pin": 27
+  },
+  "updated_at": "2026-11-09T17:22:12-03:00"
+}
