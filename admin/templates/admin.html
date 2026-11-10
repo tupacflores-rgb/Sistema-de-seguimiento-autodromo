@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MultiCam Vision · Administrador</title>
+<meta name="mcv-version" content="{{ version }}">
+<meta name="mcv-assets" content="{{ assets_v }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='admin.css', v=assets_v) }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <div>
+      <div class="brand-title">MultiCam Vision</div>
+      <div class="brand-sub">Administrador · Autódromo 1:24 · <span id="appVersion">v{{ version }}</span></div>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button role="tab" data-section="cameras" class="tab"><span class="tab-n">1</span>Cámaras</button>
+    <button role="tab" data-section="live" class="tab"><span class="tab-n">2</span>Video en vivo</button>
+    <button role="tab" data-section="config" class="tab"><span class="tab-n">3</span>Configuración</button>
+    <button role="tab" data-section="track" class="tab"><span class="tab-n">4</span>Pista</button>
+    <button role="tab" data-section="vehicles" class="tab"><span class="tab-n">5</span>Vehículos</button>
+    <button role="tab" data-section="tracking" class="tab"><span class="tab-n">6</span>Tracking</button>
+    <button role="tab" data-section="esp32" class="tab"><span class="tab-n">7</span>ESP32 y semáforo</button>
+  </nav>
+  <div class="topbar-status" id="globalStatus"></div>
+  <label class="inline unit-switch" title="Unidad para mostrar medidas de la pista (se guarda igual, en mm)">
+    <select id="unitSelect"><option value="mm">mm</option><option value="cm">cm</option></select>
+  </label>
+  <button class="btn ghost small" id="btnBackups" title="Versiones anteriores guardadas automáticamente antes de cada cambio">Respaldos</button>
+  <a class="btn ghost small" href="/display" target="_blank" rel="noopener" title="Pantalla de solo lectura con posiciones y velocidad, para abrir en un teléfono o tablet">Modo visualización ↗</a>
+  <button class="btn live-btn" id="btnGoTracking" title="Ver el seguimiento de los vehículos en tiempo real"><span class="rec-dot" aria-hidden="true"></span>Tracking en vivo</button>
+</header>
+
+<div class="update-banner" id="updateBanner" hidden>
+  <span id="updateText"></span>
+  <button class="btn small" id="updateReload" type="button">Recargar ahora</button>
+</div>
+<nav class="setup-progress" id="setupProgress" aria-label="Primeros pasos"></nav>
+<main>
+  <!-- ============================================================ 1. CÁMARAS -->
+  <section id="sec-cameras" class="section" hidden>
+    <div class="section-head">
+      <div>
+        <h1>Cámaras</h1>
+        <p class="muted">Dirección de cada teléfono con IP Webcam. Podés pegar la URL completa (por ejemplo <code>http://192.168.1.110:8080/video</code>) o solo la IP.</p>
+      </div>
+      <button class="btn" id="btnAddCamera">+ Agregar cámara</button>
+    </div>
+    <div id="cameraWarning" class="banner warn" hidden></div>
+    <div id="cameraCards" class="card-grid"></div>
+  </section>
+
+  <!-- ============================================================ 2. VIDEO -->
+  <section id="sec-live" class="section" hidden>
+    <div class="section-head">
+      <div>
+        <h1>Video en vivo</h1>
+        <p class="muted">Las métricas son las que llegan realmente a esta PC (FPS recibidos, edad del último frame, reconexiones).</p>
+      </div>
+      <label class="inline">Vista en el navegador
+        <select id="liveFps">
+          <option value="0">sin límite</option>
+          <option value="15">15 fps</option>
+          <option value="5">5 fps</option>
+        </select>
+      </label>
+    </div>
+    <div id="liveGrid" class="live-grid"></div>
+  </section>
+
+  <!-- ============================================================ 3. CONFIGURACIÓN -->
+  <section id="sec-config" class="section" hidden>
+    <div class="section-head">
+      <div>
+        <h1>Configuración por cámara</h1>
+        <p class="muted">Los ajustes se leen del propio teléfono. Se aplican de a uno y se puede ver el resultado en la vista previa.</p>
+      </div>
+      <div class="pills" id="configCamPills"></div>
+    </div>
+    <div id="configGeomBanner" class="banner warn" hidden>
+      Cambió la geometría de la imagen (resolución, zoom u orientación). Recapturá la imagen de referencia en <b>Pista</b> y recalibrá esta cámara.
+    </div>
+    <div class="config-layout" id="configLayout">
+      <div class="panel preview-panel">
+        <div class="panel-title">Vista previa <span class="chip" id="configState">—</span></div>
+        <div class="preview-box"><img id="configPreview" alt="Vista previa de la cámara"></div>
+        <div class="metrics" id="configMetrics"></div>
+      </div>
+      <div class="config-side">
+        <div class="panel">
+          <div class="panel-title">Ajustes rápidos</div>
+          <div class="quick">
+            <button class="btn" data-quick="recommended" title="Zoom mínimo + resolución 4:3 (usa todo el sensor)">Aplicar recomendado</button>
+            <label class="inline">Zoom <select id="quickZoom"></select></label>
+            <button class="btn ghost" data-quick="torch-on">Linterna ON</button>
+            <button class="btn ghost" data-quick="torch-off">Linterna OFF</button>
+            <button class="btn ghost" data-quick="focus">Enfocar</button>
+          </div>
+          <div class="msg" id="quickMsg"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Ajustes de IP Webcam
+            <span class="spacer"></span>
+            <span class="muted small" id="ipwResponse"></span>
+            <button class="btn small ghost" id="btnIpwRefresh">Actualizar</button>
+          </div>
+          <div id="ipwError" class="banner error" hidden></div>
+          <table class="settings-table" id="ipwTable">
+            <thead><tr><th>Ajuste</th><th>Valor</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <p class="muted small">⚠ = cambia la geometría de la imagen e invalida la calibración.</p>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Parámetros del sistema (esta PC)</div>
+          <form id="procForm" class="form-grid">
+            <label>Edad máxima de frame (ms)<input type="number" name="max_frame_age_ms" min="10" max="5000" step="10"></label>
+            <label>Corrección de latencia (ms)<input type="number" name="latency_offset_ms" min="-2000" max="2000" step="1"></label>
+            <label>FPS objetivo<input type="number" name="target_fps" min="1" max="60" step="1"></label>
+            <div class="form-actions"><button class="btn" type="submit">Guardar</button><span class="msg" id="procMsg"></span></div>
+          </form>
+          <p class="muted small">Frames más viejos que la edad máxima se descartan. La corrección de latencia se mide con la prueba del LED (pendiente).</p>
+        </div>
+      </div>
+    </div>
+    <div id="configEmpty" class="empty" hidden>No hay cámaras habilitadas con IP. Configuralas en la sección 1.</div>
+  </section>
+
+  <!-- ============================================================ 4. PISTA -->
+  <section id="sec-track" class="section" hidden>
+    <div class="section-head">
+      <div>
+        <h1>Pista</h1>
+        <p class="muted">Plano en milímetros (referencia común). En la vista <b>Vinculada</b> se dibuja una sola vez y aparece en el plano y en las fotos de las cámaras calibradas.</p>
+      </div>
+      <div class="track-save">
+        <span class="msg" id="trackMsg"></span>
+        <button class="btn" id="btnTrackSave">Guardar pista</button>
+      </div>
+    </div>
+    <div class="pills" id="trackViews"></div>
+    <div class="banner warn" id="linkedHint" hidden></div>
+    <div class="track-layout">
+      <aside class="panel track-tools">
+        <div id="planSettings">
+          <div class="panel-title">Medidas de la plancha</div>
+          <div class="form-grid two">
+            <label class="wide">Plantilla de tamaño
+              <span class="preset-row">
+                <select id="trackSizePreset"><option value="">Elegir…</option></select>
+                <button type="button" class="btn small ghost" id="btnSavePreset" title="Guardar el largo/ancho actual como plantilla propia">Guardar como plantilla</button>
+                <button type="button" class="btn small danger ghost" id="btnDeletePreset" title="Borrar la plantilla propia elegida" hidden>Borrar plantilla</button>
+              </span></label>
+            <label><span>Largo (<span class="unit-lbl">mm</span>)</span><input type="number" id="trackW" min="10" max="20000" step="10"></label>
+            <label><span>Ancho (<span class="unit-lbl">mm</span>)</span><input type="number" id="trackH" min="10" max="20000" step="10"></label>
+            <label><span>Grilla (<span class="unit-lbl">mm</span>)</span><input type="number" id="trackGrid" min="0.1" max="1000" step="1"></label>
+            <label class="check"><input type="checkbox" id="trackSnap" checked> Ajustar a grilla</label>
+            <label class="wide">Fondo del plano
+              <select id="trackBg"><option value="">Ninguno</option></select></label>
+          </div>
+          <p class="muted small" id="trackBgHint">Con una cámara calibrada podés ver su foto <b>enderezada</b> (vista desde arriba, sin la deformación del ángulo) y dibujar el 8 encima.</p>
+        </div>
+        <div id="linkedSettings" hidden>
+          <div class="panel-title">Modo</div>
+          <div class="seg" role="group" aria-label="Modo de edición">
+            <button type="button" class="seg-btn" data-mode="draw" aria-pressed="true">Dibujar pista</button>
+            <button type="button" class="seg-btn" data-mode="calib" aria-pressed="false">Puntos de referencia</button>
+          </div>
+          <div id="calibPanel" hidden>
+            <p class="muted small">Usá marcas fijas visibles (cinta, esquinas, ArUco pegados en la plancha). Elegí un punto, escribí su posición medida en mm (o hacé clic en el plano) y hacé clic sobre la misma marca en cada foto. Hacen falta <b>4 o más</b> por cámara, repartidos y no alineados; idealmente algunos en la zona que ven las dos.</p>
+            <div id="calibList" class="calib-list"></div>
+            <div class="tool-row">
+              <button class="btn small" id="btnAdd4Corners" type="button" title="Crea de una vez 4 puntos ya ubicados en las esquinas de la plancha (NO/NE/SO/SE): después solo hay que marcarlos en cada foto">+ 4 esquinas</button>
+              <button class="btn small ghost" id="btnAddCalib" type="button">+ Punto suelto</button>
+            </div>
+            <div id="calibQuality" class="calib-quality"></div>
+          </div>
+        </div>
+        <div id="camSettings" hidden>
+          <div class="panel-title">Imagen de referencia</div>
+          <p class="muted small" id="snapInfo"></p>
+          <button class="btn" id="btnSnapshot">Capturar imagen actual</button>
+          <div class="msg" id="snapMsg"></div>
+        </div>
+        <div class="panel-title">Capas</div>
+        <div class="layers" id="layerList"></div>
+        <div class="zones" id="zoneList"></div>
+        <div class="tool-row">
+          <button class="btn ghost small" id="btnUndo" title="Ctrl+Z">Deshacer</button>
+          <button class="btn ghost small" id="btnClearLayer">Borrar capa</button>
+          <button class="btn ghost small" id="btnZoomOut" title="Alejar">−</button>
+          <button class="btn ghost small" id="btnZoomIn" title="Acercar">+</button>
+          <button class="btn ghost small" id="btnFit">Encuadrar</button>
+        </div>
+        <div class="help small">
+          <b>Clic</b> agrega un punto al final · <b>Arrastrar</b> mueve un punto · <b>Clic derecho</b> borra un punto ·
+          <b>Shift+clic</b> sobre un tramo inserta un punto · <b>Rueda</b> desplaza · <b>Ctrl+rueda</b> zoom ·
+          <b>Espacio+arrastrar</b> o botón central: desplazar también.
+          El primer punto de la línea central marca el <b>inicio</b> y la flecha el <b>sentido de carrera</b>.
+        </div>
+      </aside>
+      <div>
+        <div class="panel canvas-panel" id="singlePanel">
+          <canvas id="trackCanvas" tabindex="0" aria-label="Editor de pista"></canvas>
+          <div class="canvas-status"><span id="cursorPos">—</span><span id="layerInfo"></span></div>
+        </div>
+        <div class="linked-grid" id="linkedGrid" hidden></div>
+      </div>
+    </div>
+  </section>
+  <!-- ============================================================ 5. VEHÍCULOS -->
+  <section id="sec-vehicles" class="section" hidden>
+    <div class="section-head">
+      <div>
+        <h1>Vehículos</h1>
+        <p class="muted">Cada auto lleva un LED RGB de un color distinto: las cámaras lo identifican por ese color. Conviene tonos bien separados (por ejemplo rojo, verde, azul y magenta) y tomar el color desde la cámara, porque el teléfono no ve el LED igual que el ojo.</p>
+      </div>
+      <div class="track-save">
+        <span class="msg" id="vehMsg"></span>
+        <button class="btn" id="btnVehSave">Guardar vehículos</button>
+      </div>
+    </div>
+    <div class="veh-top">
+      <div class="panel">
+        <div class="panel-title">Cantidad de vehículos</div>
+        <div class="seg" id="vehCount" role="group" aria-label="Cantidad de vehículos"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Detección</div>
+        <div class="form-grid det-grid">
+          <label class="check"><input type="checkbox" id="detMotion"> Exigir movimiento para empezar a seguir</label>
+          <label class="check"><input type="checkbox" id="detTrack"> Buscar solo dentro de la pista</label>
+          <label>Ancho de procesamiento
+            <select id="detWidth"><option value="640">640 px (más rápido)</option><option value="960">960 px</option><option value="1280">1280 px</option><option value="1920">1920 px (más preciso)</option></select></label>
+          <label>Perdido después de (s)<input type="number" id="detLost" min="0.1" max="10" step="0.1"></label>
+          <label><span>Altura del LED sobre la pista (<span class="unit-lbl">mm</span>)</span><input type="number" id="detLedH" min="0" max="300" step="1"></label>
+          <p class="muted small wide" style="margin:0">Medí desde la pista hasta el LED. Con cámaras en ángulo, sin este dato la posición sale corrida varios centímetros. Se corrige con la posición de cada cámara, que se calcula sola al calibrar. 0 = sin corrección.</p>
+        </div>
+      </div>
+    </div>
+    <div id="vehWarnings"></div>
+    <div id="vehCards" class="veh-grid"></div>
+  </section>
+
+  <!-- ============================================================ 6. TRACKING -->
+  <section id="sec-tracking" class="section" hidden>
+    <div class="section-head">
+      <div>
+        <h1>Tracking en tiempo real</h1>
+        <p class="muted">Seguimiento por color del LED + movimiento, fusionando las cámaras sobre el plano en mm. Las posiciones son <b>provisionales</b> (calibración preliminar por homografía).</p>
+      </div>
+      <div class="track-save">
+        <span class="chip off" id="trkState">Detenido</span>
+        <button class="btn ghost" id="btnTrkDemo" title="Simula autos y una carrera sin cámaras, para probar esta pantalla y la de visualización">🧪 Modo demo</button>
+        <button class="btn ghost" id="btnTrkReset" title="Pone en cero las vueltas">Reiniciar vueltas</button>
+        <button class="btn" id="btnTrkToggle">▶ Iniciar tracking</button>
+      </div>
+    </div>
+    <div id="trkWarnings"></div>
+    <div class="trk-layout">
+      <div class="panel canvas-panel">
+        <canvas id="trkCanvas" aria-label="Plano con la posición de los vehículos"></canvas>
+        <div class="canvas-status"><span id="trkInfo">—</span><span id="trkUptime"></span></div>
+      </div>
+      <div class="panel trk-side">
+        <div class="panel-title">Posiciones</div>
+        <table class="standings" id="trkTable">
+          <thead><tr><th>Pos</th><th>Auto</th><th>Estado</th><th>Vueltas</th><th>Velocidad</th><th>Última / mejor</th><th>Cámaras</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <p class="muted small">Velocidad real en m/s y, debajo, la equivalente a escala real de un auto 1:24 (km/h × 24).</p>
+      </div>
+    </div>
+    <div class="section-head" style="margin-top:18px">
+      <h2 class="h2">Cámaras</h2>
+      <label class="check"><input type="checkbox" id="trkShowCams"> Ver video con las detecciones</label>
+    </div>
+    <div id="trkCams" class="live-grid"></div>
+  </section>
+
+  <!-- ============================================================ 7. ESP32 Y SEMÁFORO -->
+  <section id="sec-esp32" class="section" hidden>
+    <div class="section-head">
+      <div>
+        <h1>ESP32 y semáforo</h1>
+        <p class="muted">Semáforo de salida (6 LEDs por un 74HC595N) y 3 lectores RFID (RC522), por USB Serial. No reemplaza el tracking por cámaras: la cuenta regresiva solo marca el inicio oficial de la carrera (pone vueltas y tiempos en cero al llegar a cero).</p>
+      </div>
+      <div class="track-save">
+        <span class="chip off" id="espConn">—</span>
+        <button class="btn ghost" id="btnEspReset" title="Vuelve el semáforo a reposo; NO borra vueltas ni tiempos ya corridos">Restablecer</button>
+        <button class="btn ghost" id="btnEspCancel" title="Cancela la cuenta regresiva en curso" hidden>Cancelar cuenta</button>
+        <button class="btn" id="btnEspStart">▶ Iniciar carrera</button>
+      </div>
+    </div>
+    <div id="espWarnings"></div>
+    <div class="esp-top">
+      <div class="panel">
+        <div class="panel-title">Modo y conexión</div>
+        <div class="form-grid">
+          <label>Modo
+            <select id="espMode"><option value="simulation">Simulación (sin hardware)</option><option value="hardware">Hardware (ESP32 real)</option></select></label>
+          <label>Puerto COM<input type="text" id="espPort" placeholder="COM5" maxlength="40"></label>
+          <label>Velocidad (baudios)
+            <select id="espBaud">
+              <option value="9600">9600</option><option value="19200">19200</option><option value="38400">38400</option>
+              <option value="57600">57600</option><option value="74880">74880</option><option value="115200" selected>115200</option>
+              <option value="230400">230400</option><option value="460800">460800</option><option value="921600">921600</option>
+            </select></label>
+          <div class="form-actions"><span class="msg" id="espCfgMsg"></span><button class="btn small" id="btnEspSaveCfg" type="button">Guardar modo/puerto</button></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Estado del ESP32</div>
+        <div class="esp-status-grid">
+          <div><span class="muted small">Identificación</span><div id="espId">—</div></div>
+          <div><span class="muted small">Firmware</span><div id="espFw">—</div></div>
+          <div><span class="muted small">Último mensaje</span><div id="espLastComm">—</div></div>
+          <div><span class="muted small">Orden de LEDs</span><div id="espLedAck">—</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Semáforo</div>
+        <div class="led-strip" id="espLeds" aria-label="6 LEDs del semáforo"></div>
+        <div class="esp-race-row">
+          <span class="chip off" id="espRaceState">Reposo</span>
+          <span id="espCountdown" class="mono"></span>
+        </div>
+      </div>
+    </div>
+    <div class="panel-title" style="margin-top:4px">Lectores RFID</div>
+    <div id="espReaders" class="esp-readers"></div>
+  </section>
+</main>
+
+<dialog id="backupsDialog" class="dialog">
+  <form method="dialog" class="dialog-inner">
+    <div class="panel-title">Respaldos automáticos<span class="spacer"></span>
+      <button class="btn small ghost" value="cancel" type="submit">Cerrar</button></div>
+    <p class="muted small">Antes de cada «Guardar» se guarda una copia de la versión anterior de cámaras, pista o vehículos. Si algo se borró o se rompió por error, se puede volver a una de estas.</p>
+    <div class="tool-row" id="backupsFilter" role="tablist" aria-label="Filtrar respaldos">
+      <button type="button" class="btn small ghost active" data-kind="">Todo</button>
+      <button type="button" class="btn small ghost" data-kind="cameras">Cámaras</button>
+      <button type="button" class="btn small ghost" data-kind="track">Pista</button>
+      <button type="button" class="btn small ghost" data-kind="vehicles">Vehículos</button>
+    </div>
+    <div id="backupsList" class="calib-list"></div>
+  </form>
+</dialog>
+
+<dialog id="pickDialog" class="dialog">
+  <form method="dialog" class="dialog-inner">
+    <div class="panel-title"><span id="pickTitle">Tomar color</span><span class="spacer"></span>
+      <select id="pickCam" aria-label="Cámara"></select>
+      <button class="btn small ghost" value="cancel" type="submit">Cerrar</button></div>
+    <p class="muted small" id="pickHelp">Hacé clic sobre el LED del auto en la imagen. Si se mueve, frená el auto o tocá «Nueva imagen».</p>
+    <div class="pick-box"><img id="pickImg" alt="Imagen de la cámara"><div id="pickMarker" class="pick-marker" hidden></div></div>
+    <div class="form-actions">
+      <button class="btn small ghost" type="button" id="pickRefresh">Nueva imagen</button>
+      <span class="msg" id="pickMsg"></span>
+    </div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<template id="tplCameraCard">
+  <form class="panel camera-card" novalidate>
+    <div class="panel-title">
+      <span class="cam-name"></span>
+      <code class="cam-id"></code>
+      <span class="spacer"></span>
+      <label class="switch" title="Habilitada"><input type="checkbox" name="enabled"><span></span></label>
+    </div>
+    <div class="form-grid">
+      <label>Nombre<input name="name" maxlength="60"></label>
+      <label class="wide">IP o URL<input name="host" placeholder="192.168.1.110" autocomplete="off" spellcheck="false"></label>
+      <label>Puerto<input name="port" type="number" min="1" max="65535"></label>
+      <label>Ruta del video<input name="video_path" placeholder="/video" spellcheck="false"></label>
+      <label>Usuario<input name="username" autocomplete="off"></label>
+      <label>Contraseña<input name="password" type="password" autocomplete="new-password"></label>
+      <label class="wide">Notas<input name="notes" maxlength="500"></label>
+    </div>
+    <div class="card-url muted small"></div>
+    <div class="test-result small"></div>
+    <div class="form-actions">
+      <button class="btn" type="submit">Guardar</button>
+      <button class="btn ghost" type="button" data-act="test">Probar conexión</button>
+      <span class="spacer"></span>
+      <button class="btn danger ghost" type="button" data-act="delete">Eliminar</button>
+    </div>
+  </form>
+</template>
+
+<script src="{{ url_for('static', filename='track_editor.js', v=assets_v) }}"></script>
+<script src="{{ url_for('static', filename='admin.js', v=assets_v) }}"></script>
+</body>
+</html>
